@@ -3,7 +3,7 @@ import { AuthContext } from "../providers/AuthProvider";
 
 const SignUp = () => {
 
-    const {createUser} = useContext(AuthContext);
+    const { createUser } = useContext(AuthContext);
 
     const handleSignUp = e => {
         e.preventDefault();
@@ -11,8 +11,27 @@ const SignUp = () => {
         const email = form.email.value;
         const password = form.password.value;
         createUser(email, password)
-        .then(res => console.log(res))
-        .then(err => console.log(err))
+            .then(res => {
+                console.log(res.user);
+                //new user has been created
+                const createdAt = res.user?.metadata?.creationTime;
+                const user = { email, createdAt };
+                fetch('http://localhost:5000/user', {
+                    method: 'POST',
+                    headers: {
+                        'content-type': 'application/json'
+                    },
+                    body: JSON.stringify(user)
+                })
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data);
+                    if (data.insertedId) {
+                        alert('user added to the database')
+                    }
+                })
+            })
+            .then(err => console.error(err))
     }
 
     return (

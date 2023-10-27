@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import { AuthContext } from "../providers/AuthProvider";
+import axios from "axios";
 
 const SignIn = () => {
 
@@ -19,18 +20,25 @@ const SignIn = () => {
                 email,
                 lastLoggedAt: res.user?.metadata?.lastSignInTime
             }
-            //update last logged at in the database
-            fetch('https://coffee-store-server-49sv4rrwc-rakib-hasans-projects-6047b42f.vercel.app/user', {
-                method: 'PATCH',
-                headers: {
-                    'content-type': 'application/json'
-                },
-                body: JSON.stringify(user)
-            })
-            .then(res => res.json())
+
+            //using axios
+            axios.patch('http://localhost:5000/user', user)
             .then(data => {
-                console.log(data);
+                console.log(data.data);
             })
+
+            //update last logged at in the database
+            // fetch('http://localhost:5000/user', {
+            //     method: 'PATCH',
+            //     headers: {
+            //         'content-type': 'application/json'
+            //     },
+            //     body: JSON.stringify(user)
+            // })
+            // .then(res => res.json())
+            // .then(data => {
+            //     console.log(data);
+            // })
 
         })
         .catch(err => {

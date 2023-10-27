@@ -9,12 +9,17 @@ import SignUp from './components/SignUp.jsx';
 import SignIn from './components/SignIn.jsx';
 import AuthProvider from './providers/AuthProvider.jsx';
 import Users from './components/Users.jsx';
+import Users2 from './components/Users2.jsx';
+import {
+    QueryClient,
+    QueryClientProvider,
+} from '@tanstack/react-query';
 
 const router = createBrowserRouter([
     {
         path: "/",
         element: <App></App>,
-        loader: () => fetch('https://coffee-store-server-49sv4rrwc-rakib-hasans-projects-6047b42f.vercel.app/coffee')
+        loader: () => fetch('http://localhost:5000/coffee')
     },
     {
         path: '/addCoffee',
@@ -23,7 +28,7 @@ const router = createBrowserRouter([
     {
         path: '/updateCoffee/:id',
         element: <UpdateCoffee></UpdateCoffee>,
-        loader: ({ params }) => fetch(`https://coffee-store-server-49sv4rrwc-rakib-hasans-projects-6047b42f.vercel.app/coffee/${params.id}`)
+        loader: ({ params }) => fetch(`http://localhost:5000/coffee/${params.id}`)
     },
     {
         path: '/signup',
@@ -36,14 +41,23 @@ const router = createBrowserRouter([
     {
         path: '/users',
         element: <Users></Users>,
-        loader: () => fetch('https://coffee-store-server-49sv4rrwc-rakib-hasans-projects-6047b42f.vercel.app/user')
+        loader: () => fetch('http://localhost:5000/user')
+    },
+    {
+        path: '/users2',
+        element: <Users2></Users2>
     }
 ]);
 
+// Create a client
+const queryClient = new QueryClient()
+
 ReactDOM.createRoot(document.getElementById('root')).render(
     <React.StrictMode>
-        <AuthProvider>
-            <RouterProvider router={router} />
-        </AuthProvider>
+        <QueryClientProvider client={queryClient}>
+            <AuthProvider>
+                <RouterProvider router={router} />
+            </AuthProvider>
+        </QueryClientProvider>
     </React.StrictMode>,
 )
